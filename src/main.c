@@ -8,14 +8,21 @@ int main(int argc, char* argv[]){
         fprintf(stdout, "Usage: %s <path_to_file>", argv[0]);
         exit(0);
     }
+
+    // read and print content
     char* content = read_content(argv[1]);
-    
+    print_content(sizeof(content), content);
     printf("Test 1 passed\n");
-    int amount_lines = get_amount_lines(100, content);
+    
+    // amount of lines
+    int amount_lines = get_amount_lines(sizeof(content), content);
     printf("%i\n", amount_lines);
-    printf("Test 2 passed\n");
+    
+    // seleting a line to edit
     int selection = select_number(1, amount_lines);
-    char* cptr = edit_line(selection, content);
+    char* cptr = edit_line(selection - 1, content);
+    
+    // editing file
     FILE* f = fopen(argv[1], "w");
     
     if (f){

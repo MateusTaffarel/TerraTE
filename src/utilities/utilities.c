@@ -70,6 +70,7 @@ char* read_content(char* _File_path){ //maybe remake this function later only to
     return content;
 }
 
+// SELECTS A NUMBER (Working)
 int select_number(int _Min_line, int _Max_line){
     int c;
     int i = _Min_line;
@@ -90,29 +91,34 @@ int select_number(int _Min_line, int _Max_line){
     return i;
 }
 
+// EDITS A LINE (Not working)
+/*
+This function is not working as intended, probably because of how the memory management is being done.
+firstly: if I select line 3, it will write to line 1 with a duplicate of the text (example: I write "Teste" in line 2, it returns "TesteTeste" in line 1)
+*/
 char* edit_line(int _Line, char* _Content){
-    int size = 1024; // 1 kilobyte
-    char* temp = malloc(size);
-    
-    if (temp < sizeof(_Content)){            
-        size *= 2;
-        char* temp = realloc(temp, size);
-    }
-    
+
+    int size = 5000; // 1 kilobyte
+
     for (int i = 0; i < _Line; i++){
         _Content = strchr(_Content, '\n') + 1;
     }
-    char* line_end = strchr(_Content, '\n');
+
+    char* line_end = strchr(_Content, '\n'); 
    
+    fget_line("\n\nEnter sub-text >> ", _Content, sizeof(_Content));
+
     if (line_end != NULL){
+        int amount_lines = get_amount_lines(sizeof(line_end), line_end);
+        char temp[size * amount_lines] = {};
         strcpy(temp, line_end);
+        strcat(_Content, temp);
     }
 
-    fget_line("\n\nEnter sub-text >> ", _Content, sizeof(_Content));
-    strcat(_Content, temp);
     return _Content;
 }
 
+// GETS THE AMOUNT OF LINES (Working, kinda)
 int get_amount_lines(int size, char* Content){
     int total_lines = 0;
     for (int i = 0; i < size; i++){
@@ -126,9 +132,8 @@ int get_amount_lines(int size, char* Content){
 void print_content(int size, char* Content){
     int i = get_amount_lines(size, Content);
     char* cptr = strtok(Content, "\n");
-    for (int token = 1; token < i; token++){
-        printf("%i - ", token);
-        printf("%s", cptr);
+    for (int token = 0; token < i; token++){
+        printf("%i - %s\n", token, cptr);
         cptr = strtok(NULL, "\n");  
     }
 }
