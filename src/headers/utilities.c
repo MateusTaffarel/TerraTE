@@ -76,10 +76,10 @@ int select_number(int min_line, int max_line){
 
     while ((c = getch()) != 13) {
         switch(c) {
-            case 72:
+            case 80:
                 if (i > min_line) i--; // Prevent selection from going below min_line
                 break;
-            case 80:
+            case 72:
                 if (i < max_line) i++; // Prevent selection from going above max_line
                 break;
             default: 
