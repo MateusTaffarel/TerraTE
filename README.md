@@ -2,6 +2,7 @@
 
 - [ ] Utilities
 - [ ] Main
+- [ ] Opening big files
 - [ ] Dynamic memory allocation testing
 
 ## Português
