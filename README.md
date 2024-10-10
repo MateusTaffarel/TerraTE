@@ -1,8 +1,7 @@
 # TerraTerminalEditor
 
-- [X] Utilities.h
-- [ ] Utilities.c
-- [ ] Main.c
+- [ ] Utilities
+- [ ] Main
 - [ ] Dynamic memory allocation testing
 
 ## Português
