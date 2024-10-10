@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "../header/utilities.h"
+#include "./headers/utilities.h"
 
 int main(int argc, char* argv[]){
     if (argc < 2){
@@ -11,26 +11,34 @@ int main(int argc, char* argv[]){
 
     // read and print content
     char* content = read_content(argv[1]);
-    print_content(sizeof(content), content);
-    printf("Test 1 passed\n");
-    
+    if (!content) {
+        fprintf(stderr, "Error reading file %s\n", argv[1]);
+        return 1;
+    }
+
     // amount of lines
-    int amount_lines = get_amount_lines(sizeof(content), content);
-    printf("%i\n", amount_lines);
-    
-    // seleting a line to edit
+    int amount_lines = get_amount_lines(content);
+    print_content_with_lines(content);
+
+    printf("Select a line to edit (1 to %d): ", amount_lines);
     int selection = select_number(1, amount_lines);
-    char* cptr = edit_line(selection - 1, content);
-    
-    // editing file
-    FILE* f = fopen(argv[1], "w");
-    
-    if (f){
-        fwrite(cptr, strlen(cptr), 1, f);
+
+    char* updated_content = edit_line(selection - 1, content);
+    if (!updated_content) {
+        fprintf(stderr, "Error during editing process.\n");
+        free(content);
+        return 1;
+    }
+
+    FILE* f = fopen(argv[1], "wb");
+    if (f) {
+        fwrite(updated_content, strlen(updated_content), 1, f);
         fclose(f);
-        printf("\n\nSaved!");
-    }
-    else{
-        fprintf(stderr, "Error writing to file.");
-    }
+        printf("\n\nChanges saved!\n");
+    } else fprintf(stderr, "Error writing to file.\n");
+
+    free(content);
+    free(updated_content);
+
+    return 0;
 }
