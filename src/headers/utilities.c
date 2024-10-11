@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <conio.h>
+#include <stdbool.h>
 
 
 int fget_line(const char* prompt, char* buffer, int buffer_length) {
@@ -134,6 +135,7 @@ char* edit_line(int line, char* content) {
     char* line_start = content;
     char* line_end = NULL;
     int curr_line = 0;
+    bool last_line = false;
 
     while (curr_line < line && line_start) {
         line_start = strchr(line_start, '\n');
@@ -147,7 +149,10 @@ char* edit_line(int line, char* content) {
     }
 
     line_end = strchr(line_start, '\n'); // Find the end of the selected line
-    if (!line_end) line_end = content + strlen(content); // If last line, end is the end of the content
+    if (!line_end){
+        line_end = content + strlen(content);
+        last_line = true;
+    } // If last line, end is the end of the content
 
 
     // calculate the length of new content
@@ -170,9 +175,11 @@ char* edit_line(int line, char* content) {
     // Copy the parts into the new content buffer
     strncpy(new_content, content, prefix_length); // Copy the content before the line
     strcpy(new_content + prefix_length, new_line); // Add the new line content
+    // Notes: check if it is the end of line
     new_content[prefix_length + new_line_length] = '\n'; // Add newline after the new line content
-    strcpy(new_content + prefix_length + new_line_length + 1, line_end); // Add the content after the line
-
+    if (last_line == false) strcpy(new_content + prefix_length + new_line_length + 1, line_end + 1); // Add the content after the line
+    if (last_line == true) strcpy(new_content + prefix_length + new_line_length + 1, line_end);
+    
     free(content);
 
     return new_content;

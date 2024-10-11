@@ -16,7 +16,7 @@ int main(int argc, char* argv[]){
         fprintf(stderr, "Error reading file %s\n", argv[1]);
         return 1;
     }
-    int amount_lines = get_amount_lines(content); //amount of lines
+    int amount_lines = get_amount_lines(content); //amount of lines starting by 1 then adding
     print_content_with_lines(content);
     printf("\n");
     
@@ -24,7 +24,7 @@ int main(int argc, char* argv[]){
 
     if (selection_menu == 0) {
         printf("Select a line to edit (1 to %d): ", amount_lines);
-        int selection = select_number(1, amount_lines);
+        int selection = select_number(1, amount_lines); 
 
         char* updated_content = edit_line(selection - 1, content);
         if (!updated_content) {
