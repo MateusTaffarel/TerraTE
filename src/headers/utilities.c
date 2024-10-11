@@ -97,6 +97,38 @@ int select_number(int min_line, int max_line){
     return i;
 }
 
+int menu(char* option_1, char* option_2){
+    int c;
+    int selected_option_ptr = 0;
+
+    printf("\rSelect a menu option (Press Enter to select, use right and left arrows to change option):\n");
+    printf("\r*%s          %s", option_1, option_2);
+
+    while((c = _getch()) != 13) {
+        switch (c) {
+            case 75:
+                if (selected_option_ptr > 0){
+                    selected_option_ptr--;
+                    printf("\r"); // Move cursor to the start of the line
+                    printf("                    "); // Clear the line by printing
+                    printf("\r*%s          %s", option_1, option_2);
+                }
+                break;
+            case 77:
+                if (selected_option_ptr < 1){
+                    selected_option_ptr++;
+                    printf("\r"); // Move cursor to the start of the line
+                    printf("                    "); // Clear the line by printing spaces
+                    printf("\r%s          *%s", option_1, option_2);
+                }
+                break;
+            default:
+                continue;
+        }
+    }
+    return selected_option_ptr;
+}
+
 // EDITS A LINE 
 char* edit_line(int line, char* content) {
     char* line_start = content;
