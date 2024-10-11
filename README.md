@@ -2,8 +2,8 @@
 
 - [ ] Utilities
 - [ ] Main
-- [ ] Opening big files
-- [ ] Dynamic memory allocation testing
+- [X] Opening big files (40kb tested)
+- [X] Dynamic memory allocation
 
 ## Português
 <details>
