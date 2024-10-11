@@ -21,11 +21,6 @@ int fget_line(const char* prompt, char* buffer, int buffer_length) {
     return 0;
 }
 
-/* NOTE FOR FUTURE DEVS:
-* This function (read_content) doesn't read files more than or equal to 4kb (from what I tested)
-* Next implementation we should fix this
-* - Ayla
-*/
 char* read_content(const char* File_path) { // Changed to const char* for better practice
     FILE* f = fopen(File_path, "r");
     if (!f) {
@@ -46,7 +41,7 @@ char* read_content(const char* File_path) { // Changed to const char* for better
 
     // Look into this
 
-    while ((instance = fread(content + total_size, 1, size, f)) > 0) { // Read bytes
+    while ((instance = fread(content + total_size, 1, size - total_size, f)) > 0) { // Read bytes //added size - total_size to know how many bytes to really read per iteration
         total_size += instance; // Update total size
         // Ensure we can double the size safely
         if (total_size + size > size) {

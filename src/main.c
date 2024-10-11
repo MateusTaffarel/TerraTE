@@ -10,11 +10,7 @@ int main(int argc, char* argv[]){
     }
 
     // read and print content
-    /* NOTE FOR FUTURE DEVS:
-     * This function (read_content) doesn't read files more than or equal to 4kb (from what I tested)
-     * Next implementation we should fix this
-     * - Ayla
-    */
+
     char* content = read_content(argv[1]);
     if (!content) {
         fprintf(stderr, "Error reading file %s\n", argv[1]);
