@@ -77,7 +77,7 @@ int select_number(int min_line, int max_line){
     printf("\rSelect a line to edit (Press Enter to select, use up and down arrows to change line):\n"); // Add a prompt for context
     printf("\r%c %i", 0x10, i); // Display the current selection
 
-    while ((c = getch()) != 13) {
+    while ((c = _getch()) != 13) {
         switch(c) {
             case 80:
                 if (i > min_line) i--; // Prevent selection from going below min_line
@@ -146,22 +146,23 @@ char* edit_line(int line, char* content) {
     return new_content;
 }
 
-// GETS THE AMOUNT OF LINES (Working, kinda)
-int get_amount_lines(const char* Content){
+// GETS THE AMOUNT OF LINES (Working)
+int get_amount_lines(const char* content){
     int total_lines = 0;
-    size_t content_length = strlen(Content);
+    size_t content_length = strlen(content);
 
     for (int i = 0; i < content_length; i++) {
-        if (Content[i] == '\n'){ 
+        if (content[i] == '\n'){ 
             total_lines++;
         }
     }
     return total_lines;
 }
 
-void print_content(char* Content){
-    int i = get_amount_lines(Content);
-    char* cptr = strtok(Content, "\n");
+// PRINTS CONTENTS (Working)
+void print_content(char* content){
+    int i = get_amount_lines(content);
+    char* cptr = strtok(content, "\n");
     for (int token = 0; token < i; token++){
         printf("%i - %s\n", token, cptr);
         cptr = strtok(NULL, "\n");
@@ -175,7 +176,7 @@ void print_content_with_lines(const char* content) {
     for (const char* ptr = content; *ptr != '\0'; ++ptr) {
         if (*ptr == '\n') {
             printf("%d: ", line_number);
-            fwrite(line_start, 1, ptr - line_start + 1, stdout);
+            fwrite(line_start, 1, ptr - line_start + 1, stdout); //interesting...
             line_number++;
 
             line_start = ptr + 1;

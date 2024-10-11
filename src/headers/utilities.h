@@ -45,6 +45,15 @@ char* read_content(const char* File_path);
 int select_number(int min_line, int max_line);
 
 /**
+ * Prompts the user to select an option using keyboard input.
+ *
+ * @param {char*} option_1 - The first option that can be selected.
+ * @param {char*} option_2 - The second option that can be selected.
+ * @return {int} Returns the selected option.
+ */
+int menu(char* option_1, char* option_2);
+
+/**
  * Edits a specific line in the content and returns the updated content.
  *
  * @param {int} line - The line number to edit (0-indexed).
