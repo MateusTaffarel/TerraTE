@@ -11,7 +11,7 @@ int main(int argc, char* argv[]){
 
     // read and print content
     /* NOTE FOR FUTURE DEVS:
-     * This function doesn't read files more than or equal to 4kb (from what I tested)
+     * This function (read_content) doesn't read files more than or equal to 4kb (from what I tested)
      * Next implementation we should fix this
      * - Ayla
     */
