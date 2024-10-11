@@ -4,20 +4,19 @@
 #include "./headers/utilities.h"
 
 int main(int argc, char* argv[]){
-    if (argc < 2){
+    if (argc < 2) {
         fprintf(stdout, "Usage: %s <path_to_file>", argv[0]);
         exit(0);
     }
 
     // read and print content
+
     char* content = read_content(argv[1]);
     if (!content) {
         fprintf(stderr, "Error reading file %s\n", argv[1]);
         return 1;
     }
-
-    // amount of lines
-    int amount_lines = get_amount_lines(content);
+    int amount_lines = get_amount_lines(content); //amount of lines
     print_content_with_lines(content);
 
     printf("Select a line to edit (1 to %d): ", amount_lines);
@@ -35,7 +34,8 @@ int main(int argc, char* argv[]){
         fwrite(updated_content, strlen(updated_content), 1, f);
         fclose(f);
         printf("\n\nChanges saved!\n");
-    } else fprintf(stderr, "Error writing to file.\n");
+    } 
+    else fprintf(stderr, "Error writing to file.\n");
 
     free(content);
     free(updated_content);

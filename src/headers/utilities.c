@@ -38,7 +38,10 @@ char* read_content(const char* File_path) { // Changed to const char* for better
     }
 
     size_t instance;
-    while ((instance = fread(content + total_size, 1, size, f)) > 0) { // Read bytes
+
+    // Look into this
+
+    while ((instance = fread(content + total_size, 1, size - total_size, f)) > 0) { // Read bytes //added size - total_size to know how many bytes to really read per iteration
         total_size += instance; // Update total size
         // Ensure we can double the size safely
         if (total_size + size > size) {
@@ -76,10 +79,10 @@ int select_number(int min_line, int max_line){
 
     while ((c = getch()) != 13) {
         switch(c) {
-            case 72:
+            case 80:
                 if (i > min_line) i--; // Prevent selection from going below min_line
                 break;
-            case 80:
+            case 72:
                 if (i < max_line) i++; // Prevent selection from going above max_line
                 break;
             default: 

@@ -1,9 +1,9 @@
 # TerraTerminalEditor
 
-- [X] Utilities.h
-- [ ] Utilities.c
-- [ ] Main.c
-- [ ] Dynamic memory allocation testing
+- [ ] Utilities
+- [ ] Main
+- [X] Opening big files (40kb tested)
+- [X] Dynamic memory allocation
 
 ## Português
 <details>
