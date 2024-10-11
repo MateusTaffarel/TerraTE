@@ -179,16 +179,17 @@ char* edit_line(int line, char* content) {
 }
 
 // GETS THE AMOUNT OF LINES (Working)
-int get_amount_lines(const char* content){
-    int total_lines = 0;
-    size_t content_length = strlen(content);
+int get_amount_lines(const char* content) {
+    int line_number = 1;
 
-    for (int i = 0; i < content_length; i++) {
-        if (content[i] == '\n'){ 
-            total_lines++;
+    for (const char* ptr = content; *ptr != '\0'; ++ptr) {
+        if (*ptr == '\n') {
+            line_number++;
         }
     }
-    return total_lines;
+
+    // Handle any remaining content after the last newline
+    return line_number;
 }
 
 // PRINTS CONTENTS (Working)

@@ -18,8 +18,6 @@ int main(int argc, char* argv[]){
     }
     int amount_lines = get_amount_lines(content); //amount of lines
     print_content_with_lines(content);
-
-    char* updated_content = { 0 };
     printf("\n");
     
     int selection_menu = menu("Edit line.", "Quit.");
@@ -28,7 +26,7 @@ int main(int argc, char* argv[]){
         printf("Select a line to edit (1 to %d): ", amount_lines);
         int selection = select_number(1, amount_lines);
 
-        updated_content = edit_line(selection - 1, content);
+        char* updated_content = edit_line(selection - 1, content);
         if (!updated_content) {
             fprintf(stderr, "Error during editing process.\n");
             free(content);
@@ -42,13 +40,13 @@ int main(int argc, char* argv[]){
             printf("\n\nChanges saved!\n");
         } 
         else fprintf(stderr, "Error writing to file.\n");
+        free(updated_content);
     }
     else if (selection_menu == 1) {
         exit(0);
     }
 
     free(content);
-    free(updated_content);
 
     return 0;
 }
