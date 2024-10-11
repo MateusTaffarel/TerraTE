@@ -43,6 +43,9 @@ char* read_content(const char* File_path) { // Changed to const char* for better
     }
 
     size_t instance;
+
+    // Look into this
+
     while ((instance = fread(content + total_size, 1, size, f)) > 0) { // Read bytes
         total_size += instance; // Update total size
         // Ensure we can double the size safely
