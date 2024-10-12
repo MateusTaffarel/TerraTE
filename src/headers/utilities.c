@@ -235,5 +235,4 @@ void print_content_with_lines(const char* content) {
     }
 }
 
-// So I thought about checking the index of the string and if it finds a newline, it will print the sum of all
-// newlines (if encounters new line = newlineit++) encountered before (+ 1 so we actually have line 1 as 1 and not 0) ant then print the string;
+// We need to create an add_line function to be honest
