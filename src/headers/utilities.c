@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <conio.h>
+#include <stdbool.h>
 
 
 int fget_line(const char* prompt, char* buffer, int buffer_length) {
@@ -71,19 +72,23 @@ char* read_content(const char* File_path) { // Changed to const char* for better
 
 // SELECTS A NUMBER (Working)
 int select_number(int min_line, int max_line){
+    bool quit = false;
     int c;
     int i = min_line;
 
-    printf("\rSelect a line to edit (Press Enter to select, use up and down arrows to change line):\n"); // Add a prompt for context
     printf("\r%c %i", 0x10, i); // Display the current selection
 
-    while ((c = getch()) != 13) {
+    while ((c = _getch()) != 13 && quit != true) {
         switch(c) {
             case 80:
                 if (i > min_line) i--; // Prevent selection from going below min_line
                 break;
             case 72:
                 if (i < max_line) i++; // Prevent selection from going above max_line
+                break;
+            case 27:
+                quit = true;
+                return -1;
                 break;
             default: 
                 continue;
@@ -97,11 +102,44 @@ int select_number(int min_line, int max_line){
     return i;
 }
 
+int menu(char* option_1, char* option_2){
+    int c;
+    int selected_option_ptr = 0;
+
+    printf("\rSelect a menu option (Press Enter to select, use right and left arrows to change option):\n");
+    printf("\r*%s          %s", option_1, option_2);
+
+    while((c = _getch()) != 13) {
+        switch (c) {
+            case 75:
+                if (selected_option_ptr > 0){
+                    selected_option_ptr--;
+                    printf("\r"); // Move cursor to the start of the line
+                    printf("                    "); // Clear the line by printing
+                    printf("\r*%s          %s", option_1, option_2); // Print the new selection
+                }
+                break;
+            case 77:
+                if (selected_option_ptr < 1){
+                    selected_option_ptr++;
+                    printf("\r"); // Move cursor to the start of the line
+                    printf("                    "); // Clear the line by printing spaces
+                    printf("\r%s          *%s", option_1, option_2); // Print the new selection
+                }
+                break;
+            default:
+                continue;
+        }
+    }
+    return selected_option_ptr;
+}
+
 // EDITS A LINE 
 char* edit_line(int line, char* content) {
     char* line_start = content;
     char* line_end = NULL;
     int curr_line = 0;
+    bool last_line = false;
 
     while (curr_line < line && line_start) {
         line_start = strchr(line_start, '\n');
@@ -115,7 +153,10 @@ char* edit_line(int line, char* content) {
     }
 
     line_end = strchr(line_start, '\n'); // Find the end of the selected line
-    if (!line_end) line_end = content + strlen(content); // If last line, end is the end of the content
+    if (!line_end){
+        line_end = content + strlen(content);
+        last_line = true;
+    } // If last line, end is the end of the content
 
 
     // calculate the length of new content
@@ -139,29 +180,35 @@ char* edit_line(int line, char* content) {
     strncpy(new_content, content, prefix_length); // Copy the content before the line
     strcpy(new_content + prefix_length, new_line); // Add the new line content
     new_content[prefix_length + new_line_length] = '\n'; // Add newline after the new line content
-    strcpy(new_content + prefix_length + new_line_length + 1, line_end); // Add the content after the line
 
+    // Check if it is the end of line
+
+    if (last_line == false) strcpy(new_content + prefix_length + new_line_length + 1, line_end + 1); // Add the content after the line
+    if (last_line == true) strcpy(new_content + prefix_length + new_line_length + 1, line_end);
+    
     free(content);
 
     return new_content;
 }
 
-// GETS THE AMOUNT OF LINES (Working, kinda)
-int get_amount_lines(const char* Content){
-    int total_lines = 0;
-    size_t content_length = strlen(Content);
+// GETS THE AMOUNT OF LINES (Working)
+int get_amount_lines(const char* content) {
+    int line_number = 1;
 
-    for (int i = 0; i < content_length; i++) {
-        if (Content[i] == '\n'){ 
-            total_lines++;
+    for (const char* ptr = content; *ptr != '\0'; ++ptr) {
+        if (*ptr == '\n') {
+            line_number++;
         }
     }
-    return total_lines;
+
+    // Handle any remaining content after the last newline
+    return line_number;
 }
 
-void print_content(char* Content){
-    int i = get_amount_lines(Content);
-    char* cptr = strtok(Content, "\n");
+// PRINTS CONTENTS (Working)
+void print_content(char* content){
+    int i = get_amount_lines(content);
+    char* cptr = strtok(content, "\n");
     for (int token = 0; token < i; token++){
         printf("%i - %s\n", token, cptr);
         cptr = strtok(NULL, "\n");
@@ -175,7 +222,7 @@ void print_content_with_lines(const char* content) {
     for (const char* ptr = content; *ptr != '\0'; ++ptr) {
         if (*ptr == '\n') {
             printf("%d: ", line_number);
-            fwrite(line_start, 1, ptr - line_start + 1, stdout);
+            fwrite(line_start, 1, ptr - line_start + 1, stdout); //interesting...
             line_number++;
 
             line_start = ptr + 1;
@@ -188,5 +235,4 @@ void print_content_with_lines(const char* content) {
     }
 }
 
-// So I thought about checking the index of the string and if it finds a newline, it will print the sum of all
-// newlines (if encounters new line = newlineit++) encountered before (+ 1 so we actually have line 1 as 1 and not 0) ant then print the string;
+// We need to create an add_line function to be honest
