@@ -19,15 +19,16 @@ OUTPUT = ./dist/terra_editor
 # Object files
 OBJ = $(SRC:.c=.o) $(HD:.c=.o)
 
-LIBPDCURSES = ./src/headers/pdcurses.a
+# LIBPDCURSES = ./src/headers/pdcurses.a
 
 # Default target (build the executable)
 all: $(OUTPUT)
 
 # Rule to build the executable
 $(OUTPUT): $(OBJ)
-	$(CC) $(OBJ) -o $(OUTPUT) $(LIBPDCURSES) -lm
+	$(CC) $(OBJ) -o $(OUTPUT)
 
+#  $(LIBPDCURSES) -lm
 
 # Rule to compile each .c file into .o files
 %.o: %.c
