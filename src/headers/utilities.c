@@ -76,7 +76,6 @@ int select_number(int min_line, int max_line){
     int c;
     int i = min_line;
 
-    printf("\rSelect a line to edit (Press Enter to select or ESC to quit, use up and down arrows to change line):\n");
     printf("\r%c %i", 0x10, i); // Display the current selection
 
     while ((c = _getch()) != 13 && quit != true) {

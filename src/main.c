@@ -18,6 +18,7 @@ int main(int argc, char* argv[]){
         return 1;
     }
     int amount_lines = get_amount_lines(content); //amount of lines starting by 1 then adding
+    printf("\n");
     print_content_with_lines(content);
     printf("\n");
     
@@ -33,7 +34,7 @@ int main(int argc, char* argv[]){
             
             // Select number
             
-            printf("Select a line to edit (1 to %d): ", amount_lines);
+            printf("\n\nSelect a line to edit (Press Enter to select or ESC to quit, use up and down arrows to change line):\n[1 to %d] \n\n", amount_lines);
             int selection = select_number(1, amount_lines);
             
             while (selection != -1){ 
@@ -64,7 +65,7 @@ int main(int argc, char* argv[]){
                 printf("\n");
                 content = read_content(argv[1]);
                 amount_lines = get_amount_lines(content); //amount of lines starting by 1 then adding
-                printf("Select a line to edit (1 to %d): ", amount_lines);
+                printf("\n\nSelect a line to edit (Press Enter to select or ESC to quit, use up and down arrows to change line):\n[1 to %d] \n\n", amount_lines);
                 selection = select_number(1, amount_lines);
             }
         }
