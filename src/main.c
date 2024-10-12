@@ -34,33 +34,39 @@ int main(int argc, char* argv[]){
             // Select number
             
             printf("Select a line to edit (1 to %d): ", amount_lines);
-            int selection = select_number(1, amount_lines); 
-
-            // Edit line
-
-            updated_content = edit_line(selection - 1, content);
-            if (!updated_content) {
-                fprintf(stderr, "Error during editing process.\n");
-                free(content);
-                return 1;
-            }
-
-            // Open and write
-
-            FILE* f = fopen(argv[1], "wb");
-            if (f) {
-                fwrite(updated_content, strlen(updated_content), 1, f);
-                fclose(f);
-                printf("\n\nChanges saved!\n");
-            }
-            else fprintf(stderr, "Error writing to file.\n");
+            int selection = select_number(1, amount_lines);
             
-            // Reprint the content
-            
-            printf("\n");
-            print_content_with_lines(updated_content);
-            printf("\n");
-            content = read_content(argv[1]);
+            while (selection != -1){ 
+
+                // Edit line
+
+                updated_content = edit_line(selection - 1, content);
+                if (!updated_content) {
+                    fprintf(stderr, "Error during editing process.\n");
+                    free(content);
+                    return 1;
+                }
+
+                // Open and write
+
+                FILE* f = fopen(argv[1], "wb");
+                if (f) {
+                    fwrite(updated_content, strlen(updated_content), 1, f);
+                    fclose(f);
+                    printf("\n\nChanges saved!\n");
+                }
+                else fprintf(stderr, "Error writing to file.\n");
+                
+                // Reprint the content
+                
+                printf("\n");
+                print_content_with_lines(updated_content);
+                printf("\n");
+                content = read_content(argv[1]);
+                amount_lines = get_amount_lines(content); //amount of lines starting by 1 then adding
+                printf("Select a line to edit (1 to %d): ", amount_lines);
+                selection = select_number(1, amount_lines);
+            }
         }
 
         // If quit selected

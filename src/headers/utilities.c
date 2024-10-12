@@ -72,19 +72,24 @@ char* read_content(const char* File_path) { // Changed to const char* for better
 
 // SELECTS A NUMBER (Working)
 int select_number(int min_line, int max_line){
+    bool quit = false;
     int c;
     int i = min_line;
 
-    printf("\rSelect a line to edit (Press Enter to select, use up and down arrows to change line):\n"); // Add a prompt for context
+    printf("\rSelect a line to edit (Press Enter to select or ESC to quit, use up and down arrows to change line):\n");
     printf("\r%c %i", 0x10, i); // Display the current selection
 
-    while ((c = _getch()) != 13) {
+    while ((c = _getch()) != 13 && quit != true) {
         switch(c) {
             case 80:
                 if (i > min_line) i--; // Prevent selection from going below min_line
                 break;
             case 72:
                 if (i < max_line) i++; // Prevent selection from going above max_line
+                break;
+            case 27:
+                quit = true;
+                return -1;
                 break;
             default: 
                 continue;
@@ -112,7 +117,7 @@ int menu(char* option_1, char* option_2){
                     selected_option_ptr--;
                     printf("\r"); // Move cursor to the start of the line
                     printf("                    "); // Clear the line by printing
-                    printf("\r*%s          %s", option_1, option_2);
+                    printf("\r*%s          %s", option_1, option_2); // Print the new selection
                 }
                 break;
             case 77:
@@ -120,7 +125,7 @@ int menu(char* option_1, char* option_2){
                     selected_option_ptr++;
                     printf("\r"); // Move cursor to the start of the line
                     printf("                    "); // Clear the line by printing spaces
-                    printf("\r%s          *%s", option_1, option_2);
+                    printf("\r%s          *%s", option_1, option_2); // Print the new selection
                 }
                 break;
             default:
@@ -136,6 +141,15 @@ char* edit_line(int line, char* content) {
     char* line_end = NULL;
     int curr_line = 0;
     bool last_line = false;
+
+    /*
+    * 
+    *
+    *
+    *
+    *
+    *
+    */
 
     while (curr_line < line && line_start) {
         line_start = strchr(line_start, '\n');
@@ -175,8 +189,10 @@ char* edit_line(int line, char* content) {
     // Copy the parts into the new content buffer
     strncpy(new_content, content, prefix_length); // Copy the content before the line
     strcpy(new_content + prefix_length, new_line); // Add the new line content
-    // Notes: check if it is the end of line
     new_content[prefix_length + new_line_length] = '\n'; // Add newline after the new line content
+
+    // Check if it is the end of line
+
     if (last_line == false) strcpy(new_content + prefix_length + new_line_length + 1, line_end + 1); // Add the content after the line
     if (last_line == true) strcpy(new_content + prefix_length + new_line_length + 1, line_end);
     
