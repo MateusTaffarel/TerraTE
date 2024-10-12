@@ -141,15 +141,6 @@ char* edit_line(int line, char* content) {
     int curr_line = 0;
     bool last_line = false;
 
-    /*
-    * 
-    *
-    *
-    *
-    *
-    *
-    */
-
     while (curr_line < line && line_start) {
         line_start = strchr(line_start, '\n');
         if (line_start) line_start++;
