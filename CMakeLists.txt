@@ -15,6 +15,9 @@ add_executable(TerraTE
     src/main.c
 )
 
+# target_link_libraries(TerraTE PRIVATE ${PROJECT_SOURCE_DIR}/src/headers/pdcurses.a)
+target_link_libraries(TerraTE PRIVATE -lwinmm -lgdi32)
+
 target_include_directories(TerraTE PUBLIC
         ${PROJECT_SOURCE_DIR}/src/headers
 )
