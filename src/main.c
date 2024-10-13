@@ -32,14 +32,14 @@ int main(int argc, char* argv[]){
     }
     int amount_lines = get_amount_lines(content); //amount of lines starting by 1 then adding
     printf("\n");
-    print_content_with_lines(content);
+    print_content_with_lines(content, argv[1]);
     printf("\n");
     
     while (1) {
 
         // Menu
 
-        int selection_menu = menu("Edit line.", "Add lines.", "Quit.");
+        int selection_menu = menu(3, "Edit line.", "Add lines.", "Quit.");
 
         // If edit line selected
 
@@ -74,7 +74,7 @@ int main(int argc, char* argv[]){
                 // Reprint the content
                 
                 printf("\n");
-                print_content_with_lines(updated_content);
+                print_content_with_lines(updated_content, argv[1]);
                 printf("\n");
                 content = read_content(argv[1]);
                 amount_lines = get_amount_lines(content); //amount of lines starting by 1 then adding
@@ -113,7 +113,7 @@ int main(int argc, char* argv[]){
                 // Reprint the content
                 
                 printf("\n");
-                print_content_with_lines(updated_content);
+                print_content_with_lines(updated_content, argv[1]);
                 printf("\n");
                 content = read_content(argv[1]);
                 amount_lines = get_amount_lines(content); //amount of lines starting by 1 then adding

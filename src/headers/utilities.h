@@ -45,14 +45,21 @@ char* read_content(const char* File_path);
 int select_number(int min_line, int max_line);
 
 /**
+ * Prints the menu.
+ *
+ * @param {char*} options - The options to be used.
+ * @param {int} selected_option - The selected option.
+  * @param {int} num_options - The amount of options.
+ */
+void print_menu(char* options[], int selected_option, int num_options);
+
+/**
  * Prompts the user to select an option using keyboard input.
  *
- * @param {char*} option_1 - The first option that can be selected.
- * @param {char*} option_2 - The second option that can be selected.
-  * @param {char*} option_3 - The third option that can be selected.
+ * @param {int} num_options - The amount of options that can be selected.
  * @return {int} Returns the selected option.
  */
-int menu(char* option_1, char* option_2, char* option_3);
+int menu(int num_options, ...);
 
 /**
  * Edits a specific line in the content and returns the updated content.
@@ -63,7 +70,7 @@ int menu(char* option_1, char* option_2, char* option_3);
  */
 char* edit_line(int line, char* content);
 
-/* Edits a specific line in the content and returns the updated content.
+/* Adds lines from a specific point and returns the updated content.
  *
  * @param {int} line - The line number to edit (0-indexed).
  * @param {int} lines_add - The amount of lines to add.
@@ -91,6 +98,6 @@ void print_content(char* Content);
  *
  * @param {const char*} content - The content string to print.
  */
-void print_content_with_lines(const char* content);
+void print_content_with_lines(const char* content, const char* path);
 
 #endif

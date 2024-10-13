@@ -1,6 +1,7 @@
 #include "./utilities.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdarg.h>
 #include <string.h>
 #include <conio.h>
 #include <stdbool.h>
@@ -105,48 +106,63 @@ int select_number(int min_line, int max_line){
 // from third option to second and then first is working
 // from first option to second and then third is not working
 
-int menu(char* option_1, char* option_2, char* option_3){
+void print_menu(char* options[], int selected_option, int num_options) {
+    printf("\r          ");
+    for (int i = 0; i < num_options; i++) {
+        if (i == selected_option) {
+            printf("[%s]        ", options[i]); // Highlight selected option
+        } else {
+            printf("%s       ", options[i]); // Regular option
+        }
+    }
+    fflush(stdout); // Ensure output is printed immediately
+}
+
+int menu(int num_options, ...) {
+    // Dynamically allocate memory for the options
+    char** options = malloc(num_options * sizeof(char*));
+    if (!options) {
+        fprintf(stderr, "Memory allocation failed.\n");
+        return -1; //indicate an error
+    }
+
+    va_list args; // Initialize argument list
+    va_start(args, num_options); // Start processing arguments
+
+    // Store each argument in the options array
+    for (int i = 0; i < num_options; i++) {
+        options[i] = va_arg(args, char*);
+    }
+
+    va_end(args); // Clean up the argument list
+
     int c;
-    int selected_option_ptr = 0;
+    int selected_option = 0; // Start at the first option
 
-    printf("\rSelect a menu option (Press Enter to select, use right and left arrows to change option):\n");
-    printf("\r[%s]          %s          %s", option_1, option_2, option_3);
+    print_menu(options, selected_option, num_options); // Initial display
 
-    while((c = _getch()) != 13) {
+    while ((c = _getch()) != 13) { // Wait for Enter key
         switch (c) {
-            case 75:
-                if ( selected_option_ptr == 1){
-                    selected_option_ptr--;
-                    printf("\r"); // Move cursor to the start of the line
-                    printf("                                                                        "); // Clear the line by printing
-                    printf("\r[%s]          %s          %s", option_1, option_2, option_3); // Print the new selection
-                }
-                if (selected_option_ptr == 2){
-                    selected_option_ptr--;
-                    printf("\r"); // Move cursor to the start of the line
-                    printf("                                                                        "); // Clear the line by printing
-                    printf("\r%s         [%s]          %s", option_1, option_2, option_3); // Print the new selection
+            case 75: // Left arrow key
+                if (selected_option > 0) {
+                    selected_option--; // Move left
                 }
                 break;
-            case 77:
-                if (selected_option_ptr == 0){
-                    selected_option_ptr++;
-                    printf("\r"); // Move cursor to the start of the line
-                    printf("                                                                        "); // Clear the line by printing spaces
-                    printf("\r%s          [%s]          %s", option_1, option_2, option_3); // Print the new selection
-                }
-                if (selected_option_ptr == 1){
-                    selected_option_ptr++;
-                    printf("\r"); // Move cursor to the start of the line
-                    printf("                                                                        "); // Clear the line by printing spaces
-                    printf("\r%s          %s          [%s]", option_1, option_2, option_3); // Print the new selection
+            case 77: // Right arrow key
+                if (selected_option < num_options - 1) {
+                    selected_option++; // Move right
                 }
                 break;
             default:
-                continue;
+                continue; // Ignore other keys
         }
+        print_menu(options, selected_option, num_options); // Update display
     }
-    return selected_option_ptr;
+
+    // Clean up dynamically allocated memory
+    free(options);
+
+    return selected_option; // Return selected option index
 }
 
 // EDITS A LINE 
@@ -211,74 +227,64 @@ char* edit_line(int line, char* content) {
     return new_content;
 }
 
-char* add_lines(int line, char* content){
+char* add_lines(int line, char* content) {
+    if (!content || line < 0) {
+        fprintf(stderr, "Invalid input.\n");
+        return NULL;
+    }
+
     char* line_start = content;
     char* line_end = NULL;
     char* new_line = "\n";
     int curr_line = 0;
-    bool last_line = false;
 
+    // Find the start of the specified line
     while (curr_line < line && line_start) {
         line_start = strchr(line_start, '\n');
-        if (line_start) line_start++;
+        if (line_start) {
+            line_start++;  // Move past the newline character
+        }
         curr_line++;
     }
 
-    size_t prefix_length = line_start - content; // Line start - content = content before new string
-    size_t new_line_length; // Length of new string
-    char array[1024]; // Buffer for new string
-
     if (!line_start) {
         fprintf(stderr, "Invalid line number.\n");
-        return content;
+        return NULL;
     }
 
     line_end = strchr(line_start, '\n'); // Find the end of the selected line
-    if (!line_end){
-        line_end = content + strlen(content);
-        last_line = true;
-    } // If last line, end is the end of the content
-
-    printf("Check");
-
-    printf("\n\nSelect how many lines to add (Press Enter to select or ESC to quit, use up and down arrows to change line):\n[1 to 25] \n\n");
-    int selection_amount_lines = 0;
-    selection_amount_lines = select_number(1, 25);
-    printf("\n%i\n", selection_amount_lines);
-
-    // problem occurs here
-
-    // Create the new lines terminators (adding new lines)
-    for (int i = 0; i < selection_amount_lines; i++){
-        strncpy(array + i, new_line, prefix_length);
+    if (!line_end) {
+        line_end = content + strlen(content); // Point to the end of the content
     }
 
-    new_line_length = strlen(array);
-
-    size_t total_new_content_size = prefix_length + new_line_length + 1 + (content + strlen(content) - line_end);
-
-    /* Total_new_content_size is the result of the prefix length (before new content) + the length of the new content
-    * + 1 for the \n or \0 terminator, and content pointer (start of content) + the length of content (size of content) - line end pointer 
-    * this will give the value of the end of the new content, so we can copy the contents of new_line to new_content
-    */
-
+    // Get the number of lines to add from the user
+    printf("\n\nSelect how many lines to add (1 to 25):\n ");
+    int selection_amount_lines = select_number(1, 25);
+    
+    // Allocate space for the new content
+    size_t prefix_length = line_start - content; // Length before the new content
+    size_t new_lines_length = selection_amount_lines * strlen(new_line); // Total length of new lines
+    size_t total_new_content_size = prefix_length + new_lines_length + (content + strlen(content) - line_end) + 1; // +1 for null terminator
     char* new_content = (char*)malloc(total_new_content_size);
     if (!new_content) {
         fprintf(stderr, "Memory allocation failed.\n");
-        return content;
+        return NULL;
     }
 
     // Copy the parts into the new content buffer
-    strncpy(new_content, content, prefix_length); // Copy the content before the line
-    strcpy(new_content + prefix_length, array); // Add the new lines
-    new_content[prefix_length + new_line_length] = '\n'; // Add newline after the new line content
+    strncpy(new_content, content, prefix_length); // Copy content before the line
+    char* new_content_position = new_content + prefix_length;
 
-    // Check if it is the end of line
+    // Add new lines
+    for (int i = 0; i < selection_amount_lines; i++) {
+        strcpy(new_content_position, new_line); // Use strcpy since new_line is constant
+        new_content_position += strlen(new_line); // Move the position pointer forward
+    }
 
-    if (last_line == false) strcpy(new_content + prefix_length + new_line_length + 1, line_end + 1); // Add the content after the line
-    if (last_line == true) strcpy(new_content + prefix_length + new_line_length + 1, line_end);
+    // Copy the remaining content after the specified line
+    strcpy(new_content_position, line_end); // Add the content after the line
 
-    return new_content;
+    return new_content; // Return the new content
 }
 
 // GETS THE AMOUNT OF LINES (Working)
@@ -305,7 +311,8 @@ void print_content(char* content){
     }
 }
 
-void print_content_with_lines(const char* content) {
+void print_content_with_lines(const char* content, const char* path) {
+    printf("\n\n[\\%s]-----\n\n", path); // Header
     int line_number = 1;
     const char* line_start = content;
 
@@ -323,6 +330,7 @@ void print_content_with_lines(const char* content) {
     if (*line_start != '\0') {
         printf("%d: %s", line_number, line_start);
     }
+        printf("\n\n-----\n\n"); // End
 }
 
-// We need to create an add_line function to be honest
+// We need to create an add_line function to be honest // Done! :3
