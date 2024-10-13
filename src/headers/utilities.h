@@ -49,9 +49,10 @@ int select_number(int min_line, int max_line);
  *
  * @param {char*} option_1 - The first option that can be selected.
  * @param {char*} option_2 - The second option that can be selected.
+  * @param {char*} option_3 - The third option that can be selected.
  * @return {int} Returns the selected option.
  */
-int menu(char* option_1, char* option_2);
+int menu(char* option_1, char* option_2, char* option_3);
 
 /**
  * Edits a specific line in the content and returns the updated content.
@@ -61,6 +62,14 @@ int menu(char* option_1, char* option_2);
  * @return {char*} Returns the updated content, or the original content on error.
  */
 char* edit_line(int line, char* content);
+
+/* Edits a specific line in the content and returns the updated content.
+ *
+ * @param {int} line - The line number to edit (0-indexed).
+ * @param {int} lines_add - The amount of lines to add.
+ * @return {char*} Returns the updated content, or the original content on error.
+ */
+char* add_lines(int line, char* content);
 
 /**
  * Counts the number of lines in the content.

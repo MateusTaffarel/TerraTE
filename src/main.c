@@ -26,7 +26,7 @@ int main(int argc, char* argv[]){
 
         // Menu
 
-        int selection_menu = menu("Edit line.", "Quit.");
+        int selection_menu = menu("Edit line.", "Add lines.", "Quit.");
 
         // If edit line selected
 
@@ -73,6 +73,40 @@ int main(int argc, char* argv[]){
         // If quit selected
 
         else if (selection_menu == 1) {
+            
+            // Create the selection for new lines
+            printf("\n\nSelect a line to edit (Press Enter to select or ESC to quit, use up and down arrows to change line):\n[1 to %d] \n\n", amount_lines);
+            int selection = select_number(1, amount_lines);
+
+            // Updated content is new lines
+
+                updated_content = add_lines(selection - 1, content);
+                if (!updated_content) {
+                        fprintf(stderr, "Error during editing process.\n");
+                        free(content);
+                        return 1;
+                    }
+
+                // Open and write to file
+
+                FILE* f = fopen(argv[1], "wb");
+                if (f) {
+                    fwrite(updated_content, strlen(updated_content), 1, f);
+                    fclose(f);
+                    printf("\n\nChanges saved!\n");
+                }
+                else fprintf(stderr, "Error writing to file.\n");
+                
+                // Reprint the content
+                
+                printf("\n");
+                print_content_with_lines(updated_content);
+                printf("\n");
+                content = read_content(argv[1]);
+                amount_lines = get_amount_lines(content); //amount of lines starting by 1 then adding
+        }
+
+        else if (selection_menu == 2){
             exit(0);
         }
     }

@@ -102,29 +102,44 @@ int select_number(int min_line, int max_line){
     return i;
 }
 
-int menu(char* option_1, char* option_2){
+// from third option to second and then first is working
+// from first option to second and then third is not working
+
+int menu(char* option_1, char* option_2, char* option_3){
     int c;
     int selected_option_ptr = 0;
 
     printf("\rSelect a menu option (Press Enter to select, use right and left arrows to change option):\n");
-    printf("\r*%s          %s", option_1, option_2);
+    printf("\r[%s]          %s          %s", option_1, option_2, option_3);
 
     while((c = _getch()) != 13) {
         switch (c) {
             case 75:
-                if (selected_option_ptr > 0){
+                if ( selected_option_ptr == 1){
                     selected_option_ptr--;
                     printf("\r"); // Move cursor to the start of the line
-                    printf("                    "); // Clear the line by printing
-                    printf("\r*%s          %s", option_1, option_2); // Print the new selection
+                    printf("                                                                        "); // Clear the line by printing
+                    printf("\r[%s]          %s          %s", option_1, option_2, option_3); // Print the new selection
+                }
+                if (selected_option_ptr == 2){
+                    selected_option_ptr--;
+                    printf("\r"); // Move cursor to the start of the line
+                    printf("                                                                        "); // Clear the line by printing
+                    printf("\r%s         [%s]          %s", option_1, option_2, option_3); // Print the new selection
                 }
                 break;
             case 77:
-                if (selected_option_ptr < 1){
+                if (selected_option_ptr == 0){
                     selected_option_ptr++;
                     printf("\r"); // Move cursor to the start of the line
-                    printf("                    "); // Clear the line by printing spaces
-                    printf("\r%s          *%s", option_1, option_2); // Print the new selection
+                    printf("                                                                        "); // Clear the line by printing spaces
+                    printf("\r%s          [%s]          %s", option_1, option_2, option_3); // Print the new selection
+                }
+                if (selected_option_ptr == 1){
+                    selected_option_ptr++;
+                    printf("\r"); // Move cursor to the start of the line
+                    printf("                                                                        "); // Clear the line by printing spaces
+                    printf("\r%s          %s          [%s]", option_1, option_2, option_3); // Print the new selection
                 }
                 break;
             default:
@@ -160,15 +175,20 @@ char* edit_line(int line, char* content) {
 
 
     // calculate the length of new content
-    size_t prefix_length = line_start - content;
-    size_t new_line_length;
-    char new_line[1024];
+    size_t prefix_length = line_start - content; // Line start - content = content before new string
+    size_t new_line_length; // Length of new string
+    char new_line[1024]; // Buffer for new string
 
     printf("\n\nEnter new content for line %d >> ", line + 1);
     fget_line(NULL, new_line, sizeof(new_line));
     new_line_length = strlen(new_line);
 
     size_t total_new_content_size = prefix_length + new_line_length + 1 + (content + strlen(content) - line_end);
+
+    /* Total_new_content_size is the result of the prefix length (before new content) + the length of the new content
+    * + 1 for the \n or \0 terminator, and content pointer (start of content) + the length of content (size of content) - line end pointer 
+    * this will give the value of the end of the new content, so we can copy the contents of new_line to new_content
+    */
 
     char* new_content = (char*)malloc(total_new_content_size);
     if (!new_content) {
@@ -187,6 +207,76 @@ char* edit_line(int line, char* content) {
     if (last_line == true) strcpy(new_content + prefix_length + new_line_length + 1, line_end);
     
     free(content);
+
+    return new_content;
+}
+
+char* add_lines(int line, char* content){
+    char* line_start = content;
+    char* line_end = NULL;
+    char* new_line = "\n";
+    int curr_line = 0;
+    bool last_line = false;
+
+    while (curr_line < line && line_start) {
+        line_start = strchr(line_start, '\n');
+        if (line_start) line_start++;
+        curr_line++;
+    }
+
+    size_t prefix_length = line_start - content; // Line start - content = content before new string
+    size_t new_line_length; // Length of new string
+    char array[1024]; // Buffer for new string
+
+    if (!line_start) {
+        fprintf(stderr, "Invalid line number.\n");
+        return content;
+    }
+
+    line_end = strchr(line_start, '\n'); // Find the end of the selected line
+    if (!line_end){
+        line_end = content + strlen(content);
+        last_line = true;
+    } // If last line, end is the end of the content
+
+    printf("Check");
+
+    printf("\n\nSelect how many lines to add (Press Enter to select or ESC to quit, use up and down arrows to change line):\n[1 to 25] \n\n");
+    int selection_amount_lines = 0;
+    selection_amount_lines = select_number(1, 25);
+    printf("\n%i\n", selection_amount_lines);
+
+    // problem occurs here
+
+    // Create the new lines terminators (adding new lines)
+    for (int i = 0; i < selection_amount_lines; i++){
+        strncpy(array + i, new_line, prefix_length);
+    }
+
+    new_line_length = strlen(array);
+
+    size_t total_new_content_size = prefix_length + new_line_length + 1 + (content + strlen(content) - line_end);
+
+    /* Total_new_content_size is the result of the prefix length (before new content) + the length of the new content
+    * + 1 for the \n or \0 terminator, and content pointer (start of content) + the length of content (size of content) - line end pointer 
+    * this will give the value of the end of the new content, so we can copy the contents of new_line to new_content
+    */
+
+    char* new_content = (char*)malloc(total_new_content_size);
+    if (!new_content) {
+        fprintf(stderr, "Memory allocation failed.\n");
+        return content;
+    }
+
+    // Copy the parts into the new content buffer
+    strncpy(new_content, content, prefix_length); // Copy the content before the line
+    strcpy(new_content + prefix_length, array); // Add the new lines
+    new_content[prefix_length + new_line_length] = '\n'; // Add newline after the new line content
+
+    // Check if it is the end of line
+
+    if (last_line == false) strcpy(new_content + prefix_length + new_line_length + 1, line_end + 1); // Add the content after the line
+    if (last_line == true) strcpy(new_content + prefix_length + new_line_length + 1, line_end);
 
     return new_content;
 }
