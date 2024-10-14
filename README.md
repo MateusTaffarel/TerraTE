@@ -2,6 +2,7 @@
 
 - [ ] Utilities
 - [ ] Main
+- [X] User Interface
 - [X] Opening big files (40kb tested)
 - [X] Dynamic memory allocation
 
