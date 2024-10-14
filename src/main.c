@@ -11,7 +11,7 @@ int main(int argc, char* argv[]){
 
     set_vtp_mode();
 
-    printf("\033[sTerraTerminalEditor\n"
+    printf("TerraTerminalEditor\n"
             "Copyright (C) 2024  Mateus Taffarel\n\n"
             "This program is free software: you can redistribute it and/or modify\n"
             "it under the terms of the GNU Affero General Public License as published\n"
@@ -112,7 +112,6 @@ int main(int argc, char* argv[]){
                 
                 // Reprint the content
                 
-                printf("\n");
                 print_content_with_lines(updated_content, argv[1]);
                 printf("\n");
                 content = read_content(argv[1]);
