@@ -46,12 +46,12 @@ int main(int argc, char* argv[]){
         // If edit line selected
 
         if (selection_menu == 0) {
-            
-            // Select number
-            
-            printf("\n\nSelect a line to edit (Press Enter to select or ESC to quit, use up and down arrows to change line):\n[1 to %d] \n\n", amount_lines);
-            int selection = select_number(1, amount_lines);
-            
+        
+        // Select number
+        
+        printf("\n\nSelect a line to edit (Press Enter to select or ESC to quit, use up and down arrows to change line):\n[1 to %d] \n\n", amount_lines);
+        int selection = select_number(1, amount_lines);
+        
             while (selection != -1){ 
 
                 // Edit line
@@ -72,14 +72,13 @@ int main(int argc, char* argv[]){
                     printf("\n\nChanges saved!\n");
                 }
                 else fprintf(stderr, "Error writing to file.\n");
-                
-                // Reprint the content
 
-                printf("\n");
-                print_content_with_lines(updated_content, argv[1]);
-                printf("\n");
+                // Refresh the editor content
                 content = read_content(argv[1]);
                 amount_lines = get_amount_lines(content); //amount of lines starting by 1 then adding
+
+                refresh_editor(content, argv[1]); // Clear and reprint editor content
+
                 printf("\n\nSelect a line to edit (Press Enter to select or ESC to quit, use up and down arrows to change line):\n[1 to %d] \n\n", amount_lines);
                 selection = select_number(1, amount_lines);
             }
@@ -112,10 +111,10 @@ int main(int argc, char* argv[]){
                 
                 // Reprint the content
                 
-                print_content_with_lines(updated_content, argv[1]);
-                printf("\n");
                 content = read_content(argv[1]);
                 amount_lines = get_amount_lines(content); //amount of lines starting by 1 then adding
+
+                refresh_editor(content, argv[1]); // Clear and reprint editor content
         }
 
         else if (selection_menu == 2){

@@ -50,6 +50,13 @@ char* read_content(const char* File_path);
 int select_number(int min_line, int max_line);
 
 /**
+ * Refreshes the screen.
+ * @param {const char*} content - The content to be refreshed.
+ * @param {const char*} path - The current file path.
+ */
+void refresh_editor(const char* content, const char* path);
+
+/**
  * Prints the menu.
  *
  * @param {char*} options - The options to be used.

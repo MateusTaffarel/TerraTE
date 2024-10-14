@@ -121,8 +121,14 @@ int select_number(int min_line, int max_line){
     return i;
 }
 
-// from third option to second and then first is working
-// from first option to second and then third is not working
+void refresh_editor(const char* content, const char* path) {
+    // Move cursor to the top-left (assuming that's where the editor content starts)
+    printf("\033[H");
+    // Clear everything after the cursor
+    printf("\033[J");
+    // Reprint the content with line numbers
+    print_content_with_lines(content, path);
+}
 
 void print_menu(char* options[], int selected_option, int num_options) {
     printf("\r          ");
@@ -280,7 +286,7 @@ char* add_lines(int line, char* content) {
     int selection_amount_lines = select_number(1, 25);
     
     // Allocate space for the new content
-    size_t prefix_length = line_start - content; // Length before the new content
+    size_t prefix_length = line_end - content; // Length before the new content
     size_t new_lines_length = selection_amount_lines * strlen(new_line); // Total length of new lines
     size_t total_new_content_size = prefix_length + new_lines_length + (content + strlen(content) - line_end) + 1; // +1 for null terminator
     char* new_content = (char*)malloc(total_new_content_size);
