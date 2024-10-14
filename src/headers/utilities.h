@@ -13,9 +13,14 @@ typedef double FLOAT64;
 
 typedef uint8_t BYTE;
 typedef uint16_t WORD;
-typedef uint32_t DWORD;
 typedef uint64_t QWORD;
 
+
+/**
+ * Sets the console mode to Virtual Terminal Processing.
+  * @return {int} If the function succeeds, the return value is nonzero.
+ */
+int set_vtp_mode();
 
 /**
  * Prompts the user for a line of input and reads it into a buffer.

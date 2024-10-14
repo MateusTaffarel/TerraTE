@@ -9,7 +9,9 @@ int main(int argc, char* argv[]){
         exit(0);
     }
 
-    printf("TerraTerminalEditor\n"
+    set_vtp_mode();
+
+    printf("\033[sTerraTerminalEditor\n"
             "Copyright (C) 2024  Mateus Taffarel\n\n"
             "This program is free software: you can redistribute it and/or modify\n"
             "it under the terms of the GNU Affero General Public License as published\n"
@@ -72,7 +74,7 @@ int main(int argc, char* argv[]){
                 else fprintf(stderr, "Error writing to file.\n");
                 
                 // Reprint the content
-                
+
                 printf("\n");
                 print_content_with_lines(updated_content, argv[1]);
                 printf("\n");
@@ -82,8 +84,6 @@ int main(int argc, char* argv[]){
                 selection = select_number(1, amount_lines);
             }
         }
-
-        // If quit selected
 
         else if (selection_menu == 1) {
             

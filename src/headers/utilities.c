@@ -5,7 +5,25 @@
 #include <string.h>
 #include <conio.h>
 #include <stdbool.h>
+#ifdef _WIN32
+#include <windows.h>
+#endif
 
+#ifdef _WIN32
+
+HANDLE sHandle;
+DWORD dwMode;
+
+int set_vtp_mode(){
+    sHandle = GetStdHandle(STD_OUTPUT_HANDLE);  // Set the handle to output
+    dwMode = 0; // Set the mode to 0 (normal)
+    GetConsoleMode(sHandle, &dwMode); // Get the console handle (stdout) and the mode (0)
+    dwMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING; // Set the mode to ENABLE_VIRTUAL_TERMINAL_PROCESSING
+    int i = SetConsoleMode(sHandle, dwMode); // Set the console mode to ENABLE_VIRTUAL_TERMINAL_PROCESSING
+    return i;
+}
+
+#endif
 
 int fget_line(const char* prompt, char* buffer, int buffer_length) {
     if (prompt != NULL) printf("%s", prompt);
@@ -110,7 +128,7 @@ void print_menu(char* options[], int selected_option, int num_options) {
     printf("\r          ");
     for (int i = 0; i < num_options; i++) {
         if (i == selected_option) {
-            printf("[%s]        ", options[i]); // Highlight selected option
+            printf("\033[1;4;36m[%s]\033[0m        ", options[i]); // Highlight selected option
         } else {
             printf("%s       ", options[i]); // Regular option
         }
@@ -312,13 +330,13 @@ void print_content(char* content){
 }
 
 void print_content_with_lines(const char* content, const char* path) {
-    printf("\n\n[\\%s]-----\n\n", path); // Header
+    printf("\n\n[\033[1;4;36m\\%s\033[0m]-----\n\n", path); // Header
     int line_number = 1;
     const char* line_start = content;
 
     for (const char* ptr = content; *ptr != '\0'; ++ptr) {
         if (*ptr == '\n') {
-            printf("%d: ", line_number);
+            printf("\033[32m%d\033[0m: ", line_number);
             fwrite(line_start, 1, ptr - line_start + 1, stdout); //interesting...
             line_number++;
 
@@ -328,7 +346,7 @@ void print_content_with_lines(const char* content, const char* path) {
 
     // Handle any remaining content after the last newline
     if (*line_start != '\0') {
-        printf("%d: %s", line_number, line_start);
+        printf("\033[32m%d\033[0m: %s", line_number, line_start);
     }
         printf("\n\n-----\n\n"); // End
 }
