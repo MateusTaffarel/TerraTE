@@ -9,7 +9,7 @@ int main(int argc, char* argv[]){
         exit(0);
     }
 
-    printf("TerraTE Editor\n"
+    printf("TerraTerminalEditor\n"
             "Copyright (C) 2024  Mateus Taffarel\n\n"
             "This program is free software: you can redistribute it and/or modify\n"
             "it under the terms of the GNU Affero General Public License as published\n"
