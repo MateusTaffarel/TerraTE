@@ -247,6 +247,7 @@ char* edit_line(int line, char* content) {
     if (last_line == false) strcpy(new_content + prefix_length + new_line_length + 1, line_end + 1); // Add the content after the line
     if (last_line == true) strcpy(new_content + prefix_length + new_line_length + 1, line_end);
     
+    // Clean memory
     free(content);
 
     return new_content;
@@ -290,7 +291,9 @@ char* add_lines(int line, char* content) {
     size_t prefix_length = line_end - content; // Length before the new content
     size_t new_lines_length = selection_amount_lines * strlen(new_line); // Total length of new lines
     size_t total_new_content_size = prefix_length + new_lines_length + (content + strlen(content) - line_end) + 1; // +1 for null terminator
+    
     char* new_content = (char*)malloc(total_new_content_size);
+    
     if (!new_content) {
         fprintf(stderr, "Memory allocation failed.\n");
         return NULL;
@@ -308,6 +311,9 @@ char* add_lines(int line, char* content) {
 
     // Copy the remaining content after the specified line
     strcpy(new_content_position, line_end); // Add the content after the line
+
+    // Clean memory
+    free(content);
 
     return new_content; // Return the new content
 }
