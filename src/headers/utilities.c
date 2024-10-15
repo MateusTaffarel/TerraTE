@@ -126,7 +126,7 @@ void refresh_editor(const char* content, const char* path) {
     printf("\033[H");
     // Clear everything
     printf("\033[J");
-    printf("\033[3J"); // This clears what we CANNOT currently see (clears the scroll)w
+    printf("\033[3J"); // This clears what we CANNOT currently see (clears the scroll)
     // Reprint the content with line numbers
     print_content_with_lines(content, path);
 }
