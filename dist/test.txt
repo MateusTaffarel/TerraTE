@@ -1,5 +1,7 @@
+Hello, my name is Mateus!
 
-
+This is a test for the TerraTerminalEditor!
+Interestingly, I need to add a way to add editing pre-existing strings without replacing the actual line!
 
 
 

@@ -82,6 +82,9 @@ int main(int argc, char* argv[]){
                 printf("\n\nSelect a line to edit (Press Enter to select or ESC to quit, use up and down arrows to change line):\n[1 to %d] \n\n", amount_lines);
                 selection = select_number(1, amount_lines);
             }
+
+            refresh_editor(content, argv[1]); // Refresh if ESC
+
         }
 
         else if (selection_menu == 1) {
@@ -90,31 +93,37 @@ int main(int argc, char* argv[]){
             printf("\n\nSelect a line to edit (Press Enter to select or ESC to quit, use up and down arrows to change line):\n[1 to %d] \n\n", amount_lines);
             int selection = select_number(1, amount_lines);
 
-            // Updated content is new lines
+            if (selection != -1){
 
-                updated_content = add_lines(selection - 1, content);
-                if (!updated_content) {
-                        fprintf(stderr, "Error during editing process.\n");
-                        free(content);
-                        return 1;
+                // Updated content is new lines
+
+                    updated_content = add_lines(selection - 1, content);
+                    if (!updated_content) {
+                            fprintf(stderr, "Error during editing process.\n");
+                            free(content);
+                            return 1;
+                        }
+
+                    // Open and write to file
+
+                    FILE* f = fopen(argv[1], "wb");
+                    if (f) {
+                        fwrite(updated_content, strlen(updated_content), 1, f);
+                        fclose(f);
+                        printf("\n\nChanges saved!\n");
                     }
+                    else fprintf(stderr, "Error writing to file.\n");
+                    
+                    // Reprint the content
+                    
+                    content = read_content(argv[1]);
+                    amount_lines = get_amount_lines(content); //amount of lines starting by 1 then adding
 
-                // Open and write to file
+                    refresh_editor(content, argv[1]); // Clear and reprint editor content
+            }
 
-                FILE* f = fopen(argv[1], "wb");
-                if (f) {
-                    fwrite(updated_content, strlen(updated_content), 1, f);
-                    fclose(f);
-                    printf("\n\nChanges saved!\n");
-                }
-                else fprintf(stderr, "Error writing to file.\n");
-                
-                // Reprint the content
-                
-                content = read_content(argv[1]);
-                amount_lines = get_amount_lines(content); //amount of lines starting by 1 then adding
+            refresh_editor(content, argv[1]); // Refresh if ESC
 
-                refresh_editor(content, argv[1]); // Clear and reprint editor content
         }
 
         else if (selection_menu == 2){

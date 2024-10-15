@@ -283,7 +283,7 @@ char* add_lines(int line, char* content) {
     }
 
     // Get the number of lines to add from the user
-    printf("\n\nSelect how many lines to add (1 to 25):\n ");
+    printf("\n\nSelect how many lines to add (Press Enter to select or ESC to quit, use up and down arrows to change amount):\n[1 to 25]\n\n ");
     int selection_amount_lines = select_number(1, 25);
     
     // Allocate space for the new content
