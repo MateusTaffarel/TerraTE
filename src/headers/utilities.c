@@ -124,8 +124,9 @@ int select_number(int min_line, int max_line){
 void refresh_editor(const char* content, const char* path) {
     // Move cursor to the top-left (assuming that's where the editor content starts)
     printf("\033[H");
-    // Clear everything after the cursor
+    // Clear everything
     printf("\033[J");
+    printf("\033[3J");
     // Reprint the content with line numbers
     print_content_with_lines(content, path);
 }
