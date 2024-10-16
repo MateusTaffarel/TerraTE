@@ -183,6 +183,8 @@ int menu(int num_options, ...) {
         }
         print_menu(options, selected_option, num_options); // Update display
     }
+    // Clean pointers
+    options = NULL;
 
     // Clean up dynamically allocated memory
     free(options);
