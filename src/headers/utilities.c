@@ -128,7 +128,7 @@ void refresh_editor(const char* content, const char* path) {
     printf("\033[J");
     printf("\033[3J"); // This clears what we CANNOT currently see (clears the scroll)
     // Reprint the content with line numbers
-    print_content_with_lines(content, path);
+    write_content_with_lines(content, path);
 }
 
 void print_menu(char* options[], int selected_option, int num_options) {
@@ -335,16 +335,7 @@ int get_amount_lines(const char* content) {
 }
 
 // PRINTS CONTENTS (Working)
-void print_content(char* content){
-    int i = get_amount_lines(content);
-    char* cptr = strtok(content, "\n");
-    for (int token = 0; token < i; token++){
-        printf("%i - %s\n", token, cptr);
-        cptr = strtok(NULL, "\n");
-    }
-}
-
-void print_content_with_lines(const char* content, const char* path) {
+void write_content_with_lines(const char* content, const char* path) {
     printf("\n\n[\033[1;4;36m\\%s\033[0m]-----\n\n", path); // Header
     int line_number = 1;
     const char* line_start = content;
@@ -354,7 +345,6 @@ void print_content_with_lines(const char* content, const char* path) {
             printf("\033[32m%d\033[0m: ", line_number);
             fwrite(line_start, 1, ptr - line_start + 1, stdout); //interesting...
             line_number++;
-
             line_start = ptr + 1;
         }
     }

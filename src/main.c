@@ -34,7 +34,7 @@ int main(int argc, char* argv[]){
     }
     int amount_lines = get_amount_lines(content); //amount of lines starting by 1 then adding
     printf("\n");
-    print_content_with_lines(content, argv[1]);
+    write_content_with_lines(content, argv[1]);
     printf("\n");
     
     while (1) {

@@ -99,17 +99,10 @@ char* add_lines(int line, char* content);
 int get_amount_lines(const char* Content);
 
 /**
- * Prints the content line by line with line numbers.
- *
- * @param {char*} Content - The content string to print.
- */
-void print_content(char* Content);
-
-/**
  * Prints the content with line numbers using @fwrite for efficient output.
  *
  * @param {const char*} content - The content string to print.
  */
-void print_content_with_lines(const char* content, const char* path);
+void write_content_with_lines(const char* content, const char* path);
 
 #endif
